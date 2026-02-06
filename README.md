@@ -1,7 +1,7 @@
 # StampTourApp
 
-Jetpack Compose로 제작 중인 스탬프 투어 앱입니다.  
-하단 네비게이션을 기반으로 홈 / 지도 / 스탬프 / 마이페이지 구조를 구성했습니다.
+Jetpack Compose로 제작 중인 스탬프 투어 앱.  
+하단 네비게이션을 기반으로 홈 / 지도 / 스탬프 / 마이페이지 구조를 구성함
 
 ## 📱 App Design Preview
 
@@ -34,4 +34,4 @@ Jetpack Compose로 제작 중인 스탬프 투어 앱입니다.
   - 홈 / 지도 / 스탬프 / 마이페이지
 - 화면 구조 분리(feature 기반)
 
-## 📂 Project Structure
+## 📂 Project
