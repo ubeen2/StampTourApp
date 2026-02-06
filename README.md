@@ -17,7 +17,6 @@ Jetpack Compose로 제작 중인 스탬프 투어 앱.
 
 </div>
 
-
 ---
 
 ## 🛠 Tech Stack
