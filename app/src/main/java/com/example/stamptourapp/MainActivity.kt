@@ -31,11 +31,11 @@ class MainActivity : ComponentActivity() {
 private fun MainApp() {
     val navController = rememberNavController()
 
-    // 🔑 현재 화면(route) 가져오기
+    //  현재 화면(route) 가져오기
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // ✅ TopBar & BottomBar를 보여줄 화면(홈/지도/스탬프만)
+    //  TopBar & BottomBar를 보여줄 화면(홈/지도/스탬프만)
     val showBars = currentRoute in listOf(
         Routes.HOME,
         Routes.MAP,

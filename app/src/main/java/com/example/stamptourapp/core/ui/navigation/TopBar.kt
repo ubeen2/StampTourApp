@@ -31,7 +31,7 @@ fun AppTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.clickable { onLogoClick() }
             ) {
-                // ✅ 로고 자리: drawable 로고로 바꿔도 됨
+                //  로고 자리: drawable 로고로 바꿔도 됨
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "logo",
