@@ -31,13 +31,11 @@ import androidx.compose.ui.unit.sp
 import com.example.stamptourapp.R
 import kotlinx.coroutines.delay
 
-// ---------------------------
-// 카드 데이터(이미지 + 텍스트)
-// ---------------------------
+// 카드 공통 아이템
 private data class SlideCardItem(
-    @DrawableRes val imageRes: Int,
+    @field:DrawableRes val imageRes: Int,
     val title: String,
-    val subtitle: String // 여기엔 "#카페 #쿠폰사용"
+    val subtitle: String
 )
 
 @Composable
@@ -57,14 +55,13 @@ fun HomeScreen(
     ) {
         Spacer(Modifier.height(14.dp))
 
-        // 1) 메인 이벤트 배너 (텍스트 제거 + 3장 자동 슬라이드, 2초 간격)
+        // 1) 메인 이벤트 배너 (3초,텍스트X)
         MainEventBannerSlider(
             imageResList = listOf(
                 R.drawable.main,
                 R.drawable.main2,
                 R.drawable.main3
             ),
-            intervalMillis = 3000L,
             onClick = { /* TODO: 메인 이벤트 상세 */ }
         )
 
@@ -148,7 +145,7 @@ fun HomeScreen(
 @Composable
 private fun MainEventBannerSlider(
     @DrawableRes imageResList: List<Int>,
-    intervalMillis: Long = 2000L,
+    intervalMillis: Long = 3000L,
     onClick: () -> Unit
 ) {
     // imageResList.size가 0일 가능성 방어
@@ -232,7 +229,7 @@ private fun SectionHeader(
         )
         Spacer(Modifier.weight(1f))
         Text(
-            text = actionText + " >",
+            text = "$actionText >", // = actionText + " >",
             fontSize = 12.sp,
             color = Color(0xFF2563EB),
             modifier = Modifier.clickable { onAction() }
