@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.stamptourapp.core.navigation.Routes
@@ -33,24 +34,29 @@ fun AppBottomBar(navController: NavController) {
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
         items.forEach { item ->
+            // ✅ route가 완전 일치가 아니라도(하위 화면/파라미터) 탭이 맞게 선택되도록
+            val selected = currentDestination
+                ?.hierarchy
+                ?.any { it.route == item.route } == true
+
             NavigationBarItem(
-                selected = currentRoute == item.route,
+                selected = selected,
                 onClick = {
                     navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = false
                         }
                         launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 icon = item.icon,
                 label = { Text(item.label) }
             )
+
         }
     }
 }

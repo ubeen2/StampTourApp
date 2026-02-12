@@ -8,6 +8,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.stamptourapp.core.navigation.AppNavGraph
@@ -31,18 +33,17 @@ class MainActivity : ComponentActivity() {
 private fun MainApp() {
     val navController = rememberNavController()
 
-    //  현재 화면(route) 가져오기
+    // ✅ 현재 Destination 가져오기 (route 단순 비교보다 안정적)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
-    //  TopBar & BottomBar를 보여줄 화면(홈/지도/스탬프만)
-    val showBars = currentRoute in listOf(
-        Routes.HOME,
-        Routes.MAP,
-        Routes.STAMPBOOK,
-        Routes.MYPAGE
-
-    )
+    // ✅ 탭 화면(하단바/상단바 표시 대상)
+    val showBars = currentDestination?.hierarchy?.any { dest ->
+        dest.route == Routes.HOME ||
+                dest.route == Routes.MAP ||
+                dest.route == Routes.STAMPBOOK ||
+                dest.route == Routes.MYPAGE
+    } == true
 
     Scaffold(
         topBar = {
@@ -50,12 +51,20 @@ private fun MainApp() {
                 AppTopBar(
                     onLogoClick = {
                         navController.navigate(Routes.HOME) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     },
                     onProfileClick = {
                         navController.navigate(Routes.MYPAGE) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )
@@ -67,6 +76,7 @@ private fun MainApp() {
             }
         }
     ) { innerPadding ->
+        // ✅ innerPadding 적용은 이미 잘 돼 있었음 (바텀바 클릭 먹힘 방지)
         AppNavGraph(
             navController = navController,
             modifier = Modifier.padding(innerPadding)
