@@ -38,7 +38,6 @@ fun AppBottomBar(navController: NavController) {
 
     NavigationBar {
         items.forEach { item ->
-            // ✅ route가 완전 일치가 아니라도(하위 화면/파라미터) 탭이 맞게 선택되도록
             val selected = currentDestination
                 ?.hierarchy
                 ?.any { it.route == item.route } == true

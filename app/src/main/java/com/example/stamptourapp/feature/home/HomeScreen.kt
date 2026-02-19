@@ -184,7 +184,6 @@ private fun MainEventBannerSlider(
             )
         }
 
-        // (선택) 인디케이터 점
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -229,7 +228,7 @@ private fun SectionHeader(
         )
         Spacer(Modifier.weight(1f))
         Text(
-            text = "$actionText >", // = actionText + " >",
+            text = "$actionText >", // = actionText + " >"랑 같음
             fontSize = 12.sp,
             color = Color(0xFF2563EB),
             modifier = Modifier.clickable { onAction() }

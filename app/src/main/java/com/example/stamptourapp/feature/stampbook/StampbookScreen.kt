@@ -31,7 +31,7 @@ private data class StampSpot(
 
 @Composable
 fun StampbookScreen(
-    onGoMap: () -> Unit,                 // ✅ 지도 이동은 콜백으로
+    onGoMap: () -> Unit,                 //  지도 이동은 콜백으로
     onCouponClick: () -> Unit = {}        // 아직 쿠폰함 없으니 기본 Unit
 ) {
     val stamps = remember {
@@ -110,7 +110,7 @@ fun StampbookScreen(
             SectionTitle(text = "남은 스탬프")
             Spacer(Modifier.height(10.dp))
 
-            // ✅ 미획득 클릭 시에만 지도 이동
+            // 미획득 클릭 시에만 지도 이동
             StampGrid(
                 items = remaining,
                 onItemClick = onGoMap

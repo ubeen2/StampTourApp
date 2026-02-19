@@ -34,9 +34,9 @@ import androidx.compose.foundation.layout.RowScope
 
 @Composable
 fun MyPageScreen(
-    // ✅ 스탬프 카드 클릭 시: Stampbook으로 이동 연결용
+    //  스탬프 카드 클릭 시: Stampbook으로 이동 연결용
     onGoStampbook: () -> Unit,
-    // ✅ 아직 상세페이지가 없어서 일단 Unit으로 두는 클릭들
+    //  아직 상세페이지가 없어서 일단 Unit으로 두는 클릭들
     onGoCoupons: () -> Unit = {},
     onGoActivity: () -> Unit = {},
     onGoSettings: () -> Unit = {},
