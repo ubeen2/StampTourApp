@@ -148,7 +148,7 @@ fun MapScreen() {
         }
     }
 
-    // 위치가 잡히면 카메라 이동
+    // 위치가 잡히면 화면중앙으로 화면 이동
     LaunchedEffect(myLatLng) {
         val here = myLatLng ?: return@LaunchedEffect
         cameraPositionState.animate(

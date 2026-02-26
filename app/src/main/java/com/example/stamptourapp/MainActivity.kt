@@ -18,6 +18,7 @@ import com.example.stamptourapp.core.ui.navigation.AppBottomBar
 import com.example.stamptourapp.core.ui.navigation.AppTopBar
 import com.example.stamptourapp.ui.theme.StampTourAppTheme
 
+// 스플래시 추가 디자인은 일단 아무렇겡나
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +34,11 @@ class MainActivity : ComponentActivity() {
 private fun MainApp() {
     val navController = rememberNavController()
 
-    // ✅ 현재 Destination 가져오기 (route 단순 비교보다 안정적)
+    //  현재 Destination 가져오기 (route 단순 비교보다 안정적)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // ✅ 탭 화면(하단바/상단바 표시 대상)
+    //  탭 화면(하단바/상단바 표시 대상)
     val showBars = currentDestination?.hierarchy?.any { dest ->
         dest.route == Routes.HOME ||
                 dest.route == Routes.MAP ||
@@ -76,7 +77,7 @@ private fun MainApp() {
             }
         }
     ) { innerPadding ->
-        // ✅ innerPadding 적용은 이미 잘 돼 있었음 (바텀바 클릭 먹힘 방지)
+        //  innerPadding 적용은 이미 잘 돼 있었음 (바텀바 클릭 먹힘 방지)
         AppNavGraph(
             navController = navController,
             modifier = Modifier.padding(innerPadding)

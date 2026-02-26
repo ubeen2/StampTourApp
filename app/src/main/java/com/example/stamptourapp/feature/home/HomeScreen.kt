@@ -31,11 +31,12 @@ import androidx.compose.ui.unit.sp
 import com.example.stamptourapp.R
 import kotlinx.coroutines.delay
 
-// 카드 공통 아이템
-private data class SlideCardItem(
+// ✅ 카드 공통 아이템 (상세 화면에서도 쓰려면 private 제거 + id 추가)
+data class SlideCardItem(
     @field:DrawableRes val imageRes: Int,
     val title: String,
-    val subtitle: String
+    val subtitle: String,
+    val id: String
 )
 
 @Composable
@@ -45,6 +46,8 @@ fun HomeScreen(
     onGoStampList: () -> Unit,
     onGoMap: () -> Unit,
     onGoCoupons: () -> Unit,
+    onGoProgramDetail: (String) -> Unit, //
+    onGoEventDetail: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -69,13 +72,13 @@ fun HomeScreen(
 
         // 2) 오늘의 프로그램
         val programItems = listOf(
-            SlideCardItem(R.drawable.cafe, "카페", "#카페 #쿠폰사용"),
-            SlideCardItem(R.drawable.vr, "VR", "#vr #게임"),
-            SlideCardItem(R.drawable.food, "맛집", "#맛집 #쿠폰사용"),
+            SlideCardItem(R.drawable.cafe, "카페", "#카페 #쿠폰사용", id = "cafe"),
+            SlideCardItem(R.drawable.vr, "VR", "#vr #게임", id = "vr"),
+            SlideCardItem(R.drawable.food, "맛집", "#맛집 #쿠폰사용", id = "food"),
         )
 
         SectionHeader(
-            title = "오늘의 프로그램:)",
+            title = "오늘의 프로그램",
             actionText = "보러가기",
             onAction = onGoProgramAll
         )
@@ -84,20 +87,23 @@ fun HomeScreen(
             items = programItems,
             cardHeight = 140.dp,
             cardWidth = 240.dp,
-            onItemClick = { /* TODO: 프로그램 카드 클릭 */ }
+            onItemClick = { item ->
+                // 카드 클릭 → 상세 화면 이동
+                onGoProgramDetail(item.id)
+            }
         )
 
         Spacer(Modifier.height(22.dp))
 
         // 3) 하이라이트 이벤트
         val eventItems = listOf(
-            SlideCardItem(R.drawable.vr, "VR 이벤트", "#vr #게임"),
-            SlideCardItem(R.drawable.cafe, "카페 이벤트", "#카페 #쿠폰사용"),
-            SlideCardItem(R.drawable.food, "맛집 이벤트", "#맛집 #쿠폰사용"),
+            SlideCardItem(R.drawable.vr, "VR 이벤트", "#vr #게임", id = "event_vr"),
+            SlideCardItem(R.drawable.cafe, "카페 이벤트", "#카페 #쿠폰사용", id = "event_cafe"),
+            SlideCardItem(R.drawable.food, "맛집 이벤트", "#맛집 #쿠폰사용", id = "event_food"),
         )
 
         SectionHeader(
-            title = "하이라이트 이벤트><",
+            title = "하이라이트 이벤트",
             actionText = "보러가기",
             onAction = onGoEventAll
         )
@@ -106,9 +112,10 @@ fun HomeScreen(
             items = eventItems,
             cardHeight = 140.dp,
             cardWidth = 240.dp,
-            onItemClick = { /* TODO: 이벤트 카드 클릭 */ }
+            onItemClick = { item ->
+                onGoEventDetail(item.id)
+            }
         )
-
         Spacer(Modifier.height(22.dp))
 
         // 4) 스탬프 진행률 섹션
@@ -148,7 +155,6 @@ private fun MainEventBannerSlider(
     intervalMillis: Long = 3000L,
     onClick: () -> Unit
 ) {
-    // imageResList.size가 0일 가능성 방어
     if (imageResList.isEmpty()) return
 
     val pagerState = rememberPagerState(
@@ -156,7 +162,6 @@ private fun MainEventBannerSlider(
         pageCount = { imageResList.size }
     )
 
-    // 2초마다 자동 슬라이드
     LaunchedEffect(imageResList) {
         while (true) {
             delay(intervalMillis)
@@ -228,7 +233,7 @@ private fun SectionHeader(
         )
         Spacer(Modifier.weight(1f))
         Text(
-            text = "$actionText >", // = actionText + " >"랑 같음
+            text = "$actionText >",
             fontSize = 12.sp,
             color = Color(0xFF2563EB),
             modifier = Modifier.clickable { onAction() }
@@ -279,7 +284,6 @@ private fun SlideCard(
             .clickable { onClick() }
             .padding(14.dp)
     ) {
-        // 이미지
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -303,7 +307,6 @@ private fun SlideCard(
             fontWeight = FontWeight.Bold,
             color = Color(0xFF111827)
         )
-        //  "#카페 #쿠폰사용"
         Text(
             text = item.subtitle,
             fontSize = 12.sp,
@@ -357,7 +360,6 @@ private fun StampProgressCard(
 
         Spacer(Modifier.height(12.dp))
 
-        // 간단 진입 바
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -450,7 +452,6 @@ private fun QuickActionCard(
             )
         }
 
-        // 아이콘 자리
         Box(
             modifier = Modifier
                 .size(34.dp)
