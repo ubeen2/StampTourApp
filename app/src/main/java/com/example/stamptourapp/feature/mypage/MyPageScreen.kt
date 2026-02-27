@@ -51,7 +51,7 @@ fun MyPageScreen(
     ) {
 
         // ---------------------------
-        // 상단 헤더 영역 (연두 톤)
+        // 상단 헤더 영역
         // ---------------------------
         Box(
             modifier = Modifier
@@ -60,8 +60,8 @@ fun MyPageScreen(
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            Color(0xFFB6FF8B),
-                            Color(0xFF8DFF6A)
+                            Color(0xFF87CEFA),
+                            Color(0xFF2196F3)
                         )
                     )
                 )
@@ -83,7 +83,7 @@ fun MyPageScreen(
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = null,
-                        tint = Color(0xFF35A100),
+                        tint = Color(0xFF6EC6FF),
                         modifier = Modifier.size(44.dp)
                     )
                 }
@@ -92,12 +92,12 @@ fun MyPageScreen(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "홍길동님",
+                        text = "유빈님",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = Color(0xFF1E1E1E)
                     )
                     Text(
-                        text = "testlive2026@email.com",
+                        text = "Ubeen2@email.com",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color(0xFF2B2B2B),
                         maxLines = 1,

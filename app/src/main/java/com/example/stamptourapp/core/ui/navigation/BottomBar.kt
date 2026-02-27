@@ -8,12 +8,13 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.stamptourapp.core.navigation.Routes
 
@@ -36,7 +37,9 @@ fun AppBottomBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.White
+    ) {
         items.forEach { item ->
             val selected = currentDestination
                 ?.hierarchy
@@ -46,16 +49,20 @@ fun AppBottomBar(navController: NavController) {
                 selected = selected,
                 onClick = {
                     navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = false
-                        }
+                        popUpTo(navController.graph.startDestinationId) { inclusive = false }
                         launchSingleTop = true
                     }
                 },
                 icon = item.icon,
-                label = { Text(item.label) }
+                label = { Text(item.label) },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color(0xFF90CAF9),
+                    selectedIconColor = Color(0xFF1976D2),
+                    selectedTextColor = Color(0xFF1976D2),
+                    unselectedIconColor = Color(0xFF607D8B),
+                    unselectedTextColor = Color(0xFF607D8B)
+                )
             )
-
         }
     }
 }

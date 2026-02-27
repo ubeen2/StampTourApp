@@ -1,5 +1,6 @@
 package com.example.stamptourapp.feature.stampbook
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,13 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,10 +31,22 @@ private data class StampSpot(
     val isCollected: Boolean,
 )
 
+// --- Sky + Navy palette ---
+private val LightSky = Color(0xFFE3F2FD)   // 연하늘 (카드 배경)
+private val SkyBlue = Color(0xFF90CAF9)    // 하늘색 (포인트 카드)
+private val DeepBlue = Color(0xFF1565C0)   // 진한 블루(남색 느낌 포인트)
+private val NavyText = Color(0xFF0D47A1)   // 강조 텍스트(남색)
+private val SoftTrack = Color(0xFFBBDEFB)  // 프로그레스 트랙
+private val MutedGray = Color(0xFFB0BEC5)  // 미획득 아이콘용 연회색
+
+// 섹션 박스 배경(아주 옅은 하늘) + 테두리
+private val SectionBg = Color(0xFFF7FBFF)
+private val SectionBorder = SoftTrack
+
 @Composable
 fun StampbookScreen(
-    onGoMap: () -> Unit,                 //  지도 이동은 콜백으로
-    onCouponClick: () -> Unit = {}        // 아직 쿠폰함 없으니 기본 Unit
+    onGoMap: () -> Unit,
+    onCouponClick: () -> Unit = {}
 ) {
     val stamps = remember {
         listOf(
@@ -58,7 +72,7 @@ fun StampbookScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 14.dp, bottom = 12.dp)
     ) {
@@ -66,13 +80,14 @@ fun StampbookScreen(
             Text(
                 text = "스탬프 컬렉션",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = NavyText
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "축제 장소를 방문하고 스탬프를 모아보세요",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+                color = NavyText.copy(alpha = 0.65f)
             )
         }
 
@@ -94,27 +109,26 @@ fun StampbookScreen(
 
         item { Spacer(Modifier.height(18.dp)) }
 
+        // ✅ 섹션 박스로 감싸서 구분 강화
         item {
-            SectionTitle(text = "획득한 스탬프")
-            Spacer(Modifier.height(10.dp))
-
-            StampGrid(
-                items = collected,
-                onItemClick = null
-            )
+            StampSectionBox(title = "획득한 스탬프") {
+                StampGrid(
+                    items = collected,
+                    onItemClick = null
+                )
+            }
         }
 
-        item { Spacer(Modifier.height(18.dp)) }
+        item { Spacer(Modifier.height(14.dp)) }
 
+        // ✅ 섹션 박스로 감싸서 구분 강화
         item {
-            SectionTitle(text = "남은 스탬프")
-            Spacer(Modifier.height(10.dp))
-
-            // 미획득 클릭 시에만 지도 이동
-            StampGrid(
-                items = remaining,
-                onItemClick = onGoMap
-            )
+            StampSectionBox(title = "남은 스탬프") {
+                StampGrid(
+                    items = remaining,
+                    onItemClick = onGoMap
+                )
+            }
         }
     }
 }
@@ -128,11 +142,9 @@ private fun ProgressCard(
     val pct = (progress * 100).toInt().coerceIn(0, 100)
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = LightSky),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column(Modifier.padding(16.dp)) {
             Row(
@@ -143,19 +155,21 @@ private fun ProgressCard(
                     Text(
                         text = "전체 진행률",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = NavyText
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = "계속해서 스탬프를 모아보세요!",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
+                        color = NavyText.copy(alpha = 0.65f)
                     )
                 }
                 Text(
                     text = "${pct}%",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = NavyText
                 )
             }
 
@@ -166,21 +180,26 @@ private fun ProgressCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(10.dp)
-                    .clip(RoundedCornerShape(999.dp))
+                    .clip(RoundedCornerShape(999.dp)),
+                color = DeepBlue,
+                trackColor = SoftTrack
             )
 
             Spacer(Modifier.height(8.dp))
 
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
                     text = "$collectedCount/$totalCount 획득",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
+                    color = NavyText.copy(alpha = 0.65f)
                 )
                 Text(
                     text = "${totalCount - collectedCount}개 남음",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
+                    color = NavyText.copy(alpha = 0.65f)
                 )
             }
         }
@@ -195,9 +214,7 @@ private fun CouponCard(onClick: () -> Unit) {
             .height(76.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        colors = CardDefaults.cardColors(containerColor = SkyBlue)
     ) {
         Row(
             Modifier
@@ -207,13 +224,14 @@ private fun CouponCard(onClick: () -> Unit) {
         ) {
             Surface(
                 shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                color = Color.White.copy(alpha = 0.55f),
                 modifier = Modifier.size(44.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Default.CardGiftcard,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = DeepBlue
                     )
                 }
             }
@@ -224,19 +242,40 @@ private fun CouponCard(onClick: () -> Unit) {
                 Text(
                     text = "쿠폰 받기",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = NavyText
                 )
                 Text(
                     text = "스탬프로 쿠폰을 교환해보세요",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                    color = NavyText.copy(alpha = 0.7f)
                 )
             }
 
             Icon(
-                imageVector = Icons.Default.ReceiptLong,
-                contentDescription = null
+                imageVector = Icons.Default.Description,
+                contentDescription = null,
+                tint = DeepBlue
             )
+        }
+    }
+}
+
+@Composable
+private fun StampSectionBox(
+    title: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = SectionBg),
+        border = BorderStroke(1.dp, SectionBorder),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            SectionTitle(text = title)
+            Spacer(Modifier.height(10.dp))
+            content()
         }
     }
 }
@@ -246,7 +285,8 @@ private fun SectionTitle(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
+        color = NavyText
     )
 }
 
@@ -284,29 +324,31 @@ private fun StampCard(
             .height(104.dp)
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, Color(0xFFE6EEF7)) // 카드도 살짝 테두리 주면 더 구분됨(원치 않으면 삭제)
     ) {
-        Box(Modifier.fillMaxSize().padding(12.dp)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
             Icon(
                 imageVector = if (spot.isCollected) Icons.Default.CheckCircle else Icons.Default.Lock,
                 contentDescription = null,
                 modifier = Modifier.size(22.dp),
-                tint = if (spot.isCollected) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
+                tint = if (spot.isCollected) DeepBlue else MutedGray
             )
 
             if (spot.isCollected) {
                 Surface(
                     shape = RoundedCornerShape(999.dp),
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    color = SoftTrack,
                     modifier = Modifier.align(Alignment.TopEnd)
                 ) {
                     Text(
                         text = "✓",
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = NavyText,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -318,13 +360,14 @@ private fun StampCard(
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = NavyText
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = spot.subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = NavyText.copy(alpha = 0.7f)
                 )
             }
         }

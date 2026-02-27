@@ -1,6 +1,7 @@
 package com.example.stamptourapp.feature.home
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,13 +34,20 @@ import androidx.compose.ui.unit.sp
 import com.example.stamptourapp.R
 import kotlinx.coroutines.delay
 
-// ✅ 카드 공통 아이템 (상세 화면에서도 쓰려면 private 제거 + id 추가)
+// 카드 공통 아이템 (상세 화면에서도 쓰려면 private 제거 + id 추가)
 data class SlideCardItem(
     @field:DrawableRes val imageRes: Int,
     val title: String,
     val subtitle: String,
     val id: String
 )
+
+// --- Home palette (Sky + Navy) ---
+private val HomeLightSky = Color(0xFFEAF6FF)
+private val HomeBorder = Color(0xFFBBDEFB)
+private val HomeNavy = Color(0xFF0F172A)
+private val HomeBlue = Color(0xFF2563EB)
+private val HomeMuted = Color(0xFF64748B)
 
 @Composable
 fun HomeScreen(
@@ -52,13 +62,13 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF6F7FB))
+            .background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
         Spacer(Modifier.height(14.dp))
 
-        // 1) 메인 이벤트 배너 (3초,텍스트X)
+        // 1) 메인 이벤트 배너
         MainEventBannerSlider(
             imageResList = listOf(
                 R.drawable.main,
@@ -83,15 +93,16 @@ fun HomeScreen(
             onAction = onGoProgramAll
         )
         Spacer(Modifier.height(10.dp))
-        HorizontalCardSlider(
-            items = programItems,
-            cardHeight = 140.dp,
-            cardWidth = 240.dp,
-            onItemClick = { item ->
-                // 카드 클릭 → 상세 화면 이동
-                onGoProgramDetail(item.id)
-            }
-        )
+
+        // ✅ 섹션 테두리 박스 추가
+        SectionBox {
+            HorizontalCardSlider(
+                items = programItems,
+                cardHeight = 140.dp,
+                cardWidth = 240.dp,
+                onItemClick = { item -> onGoProgramDetail(item.id) }
+            )
+        }
 
         Spacer(Modifier.height(22.dp))
 
@@ -108,23 +119,28 @@ fun HomeScreen(
             onAction = onGoEventAll
         )
         Spacer(Modifier.height(10.dp))
-        HorizontalCardSlider(
-            items = eventItems,
-            cardHeight = 140.dp,
-            cardWidth = 240.dp,
-            onItemClick = { item ->
-                onGoEventDetail(item.id)
-            }
-        )
+
+        // ✅ 섹션 테두리 박스 추가
+        SectionBox {
+            HorizontalCardSlider(
+                items = eventItems,
+                cardHeight = 140.dp,
+                cardWidth = 240.dp,
+                onItemClick = { item -> onGoEventDetail(item.id) }
+            )
+        }
+
         Spacer(Modifier.height(22.dp))
 
-        // 4) 스탬프 진행률 섹션
-        StampProgressCard(
-            percent = 30,
-            done = 3,
-            total = 10,
-            onGoStampList = onGoStampList
-        )
+        // ✅ 4) 스탬프 진행률 섹션도 테두리 있는 카드로 감싸기
+        SectionBox(containerColor = Color.White) {
+            StampProgressCard(
+                percent = 30,
+                done = 3,
+                total = 10,
+                onGoStampList = onGoStampList
+            )
+        }
 
         Spacer(Modifier.height(22.dp))
 
@@ -133,15 +149,39 @@ fun HomeScreen(
             text = "빠른 보기",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF0F172A)
+            color = HomeNavy
         )
         Spacer(Modifier.height(10.dp))
-        QuickActionRow(
-            onGoMap = onGoMap,
-            onGoCoupons = onGoCoupons
-        )
+
+        // ✅ 빠른보기도 테두리 박스로 감싸기
+        SectionBox {
+            QuickActionRow(
+                onGoMap = onGoMap,
+                onGoCoupons = onGoCoupons
+            )
+        }
 
         Spacer(Modifier.height(24.dp))
+    }
+}
+
+// ---------------------------
+// ✅ 공통: 섹션 테두리 박스
+// ---------------------------
+@Composable
+private fun SectionBox(
+    containerColor: Color = HomeLightSky.copy(alpha = 0.25f),
+    content: @Composable () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        border = BorderStroke(1.dp, HomeBorder),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(Modifier.padding(12.dp)) {
+            content()
+        }
     }
 }
 
@@ -229,13 +269,13 @@ private fun SectionHeader(
             text = title,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF0F172A)
+            color = HomeNavy
         )
         Spacer(Modifier.weight(1f))
         Text(
             text = "$actionText >",
             fontSize = 12.sp,
-            color = Color(0xFF2563EB),
+            color = HomeBlue,
             modifier = Modifier.clickable { onAction() }
         )
     }
@@ -280,7 +320,7 @@ private fun SlideCard(
             .width(width)
             .height(height)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(HomeLightSky.copy(alpha = 0.9f))
             .clickable { onClick() }
             .padding(14.dp)
     ) {
@@ -289,7 +329,7 @@ private fun SlideCard(
                 .fillMaxWidth()
                 .weight(1f)
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFE5E7EB))
+                .background(HomeLightSky.copy(alpha = 0.4f))
         ) {
             Image(
                 painter = painterResource(id = item.imageRes),
@@ -325,7 +365,7 @@ private fun StampProgressCard(
     total: Int,
     onGoStampList: () -> Unit
 ) {
-    val bg = Brush.linearGradient(listOf(Color(0xFFD9F99D), Color(0xFFBBF7D0)))
+    val bg = Brush.linearGradient(listOf(Color(0xFFF3FAFF), HomeBlue))
 
     Column(
         modifier = Modifier
@@ -339,14 +379,14 @@ private fun StampProgressCard(
                 text = "나의 스탬프 진행률",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF0F172A)
+                color = HomeBlue
             )
             Spacer(Modifier.weight(1f))
             Text(
                 text = "${percent}%",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFF0F172A)
+                color = HomeNavy
             )
         }
 
@@ -381,7 +421,7 @@ private fun StampProgressCard(
         Button(
             onClick = onGoStampList,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF121212).copy(alpha = 0.65f)
+                containerColor = HomeNavy.copy(alpha = 0.4f),
             ),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth()
@@ -433,7 +473,7 @@ private fun QuickActionCard(
         modifier = modifier
             .height(110.dp)
             .clip(RoundedCornerShape(18.dp))
-            .background(Color.White)
+            .background(HomeLightSky.copy(alpha = 0.4f))
             .clickable { onClick() }
             .padding(14.dp),
         verticalArrangement = Arrangement.SpaceBetween
@@ -443,12 +483,12 @@ private fun QuickActionCard(
                 text = title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF0F172A)
+                color = HomeNavy
             )
             Text(
                 text = subtitle,
                 fontSize = 12.sp,
-                color = Color(0xFF64748B)
+                color = HomeMuted
             )
         }
 
@@ -456,7 +496,7 @@ private fun QuickActionCard(
             modifier = Modifier
                 .size(34.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFE5E7EB))
+                .background(HomeBlue)
         )
     }
 }
