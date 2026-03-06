@@ -94,7 +94,7 @@ fun HomeScreen(
         )
         Spacer(Modifier.height(10.dp))
 
-        // ✅ 섹션 테두리 박스 추가
+
         SectionBox {
             HorizontalCardSlider(
                 items = programItems,
@@ -120,7 +120,7 @@ fun HomeScreen(
         )
         Spacer(Modifier.height(10.dp))
 
-        // ✅ 섹션 테두리 박스 추가
+
         SectionBox {
             HorizontalCardSlider(
                 items = eventItems,
@@ -132,7 +132,7 @@ fun HomeScreen(
 
         Spacer(Modifier.height(22.dp))
 
-        // ✅ 4) 스탬프 진행률 섹션도 테두리 있는 카드로 감싸기
+
         SectionBox(containerColor = Color.White) {
             StampProgressCard(
                 percent = 30,
@@ -153,7 +153,7 @@ fun HomeScreen(
         )
         Spacer(Modifier.height(10.dp))
 
-        // ✅ 빠른보기도 테두리 박스로 감싸기
+
         SectionBox {
             QuickActionRow(
                 onGoMap = onGoMap,
@@ -166,7 +166,7 @@ fun HomeScreen(
 }
 
 // ---------------------------
-// ✅ 공통: 섹션 테두리 박스
+// 공통: 섹션 테두리 박스
 // ---------------------------
 @Composable
 private fun SectionBox(

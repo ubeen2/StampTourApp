@@ -31,7 +31,7 @@ private data class StampSpot(
     val isCollected: Boolean,
 )
 
-// --- Sky + Navy palette ---
+
 private val LightSky = Color(0xFFE3F2FD)   // 연하늘 (카드 배경)
 private val SkyBlue = Color(0xFF90CAF9)    // 하늘색 (포인트 카드)
 private val DeepBlue = Color(0xFF1565C0)   // 진한 블루(남색 느낌 포인트)
@@ -39,7 +39,7 @@ private val NavyText = Color(0xFF0D47A1)   // 강조 텍스트(남색)
 private val SoftTrack = Color(0xFFBBDEFB)  // 프로그레스 트랙
 private val MutedGray = Color(0xFFB0BEC5)  // 미획득 아이콘용 연회색
 
-// 섹션 박스 배경(아주 옅은 하늘) + 테두리
+
 private val SectionBg = Color(0xFFF7FBFF)
 private val SectionBorder = SoftTrack
 
@@ -109,7 +109,7 @@ fun StampbookScreen(
 
         item { Spacer(Modifier.height(18.dp)) }
 
-        // ✅ 섹션 박스로 감싸서 구분 강화
+
         item {
             StampSectionBox(title = "획득한 스탬프") {
                 StampGrid(
@@ -121,7 +121,7 @@ fun StampbookScreen(
 
         item { Spacer(Modifier.height(14.dp)) }
 
-        // ✅ 섹션 박스로 감싸서 구분 강화
+
         item {
             StampSectionBox(title = "남은 스탬프") {
                 StampGrid(

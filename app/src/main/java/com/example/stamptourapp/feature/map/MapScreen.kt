@@ -247,7 +247,7 @@ private fun GoogleMapBox(
     placeLatLngMap: Map<String, LatLng>,
     onPlaceClick: (Place) -> Unit
 ) {
-    // ✅ 스타일 로드 실패해도 앱 죽지 않게
+
     val mapStyle: MapStyleOptions? = remember {
         runCatching {
             MapStyleOptions.loadRawResourceStyle(context, R.raw.sky)
@@ -288,12 +288,12 @@ private fun GoogleMapBox(
                 title = place.name,
                 snippet = place.category.label,
 
-                // ✅ 마커 탭하면 기본 InfoWindow가 뜨게만 함
+
                 onClick = {
                     false
                 },
 
-                // ✅ 말풍선(이름) 탭했을 때 바텀시트 열기
+
                 onInfoWindowClick = {
                     onPlaceClick(place)
                 }
